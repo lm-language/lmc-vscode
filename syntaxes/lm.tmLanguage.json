@@ -1,0 +1,372 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "LM",
+	"patterns": [
+		{
+			"include": "#declarations"
+		}
+	],
+	"repository": {
+		"declarations": {
+			"patterns": [
+				{
+					"include": "#extern-declarations"
+				},
+				{
+					"include": "#extern-type"
+				},
+				{
+					"include": "#let-declarations"
+				},
+				{
+					"include": "#type-declaration"
+				}
+			]
+		},
+		"extern-type": {
+			"patterns": [
+				{
+					"begin": "\\b(extern\\s+type\\s+)([a-zA-Z_][a-zA-Z0-9_]*)",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						},
+						"2": {
+							"name": "entity.name.type"
+						}
+					}
+				}
+			]
+		},
+		"type-declaration": {
+			"patterns": [
+				{
+					"begin": "\\b(type\\s+)([a-zA-Z_][a-zA-Z0-9_]*)",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						},
+						"2": {
+							"name": "entity.name.type"
+						}
+					}
+				}
+			]
+		},
+		"extern-declarations": {
+			"patterns": [
+				{
+					"begin": "\\b(extern)\\s+(?=(let)\\s+)",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						},
+						"2": {
+							"name": "keyword"
+						}
+
+					},
+					"patterns": [
+						{
+							"include": "#let-patterns"
+						},
+						{
+							"include": "#type-annotations"
+						}
+					]
+				}
+			]
+		},
+		"let-declarations": {
+			"patterns": [
+				{
+					"begin": "\\b(?=(let)\\b)",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#let-rhs"
+						},
+						{
+							"include": "#let-lhs"
+						}
+					]
+				}
+			]
+		},
+		"let-rhs": {
+			"patterns": [
+				{
+					"begin": "(?==)",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
+					"patterns": [
+						{"include": "#expressions"}
+					]
+				}
+			]
+		},
+		"let-lhs": {
+			"patterns": [
+				{
+					"begin": "\\b(?=(let)\\b)",
+					"end": "(?=[=;])",
+					"patterns": [
+						{
+							"include": "#let-patterns"
+						}
+					]
+				}
+			]
+		},
+		"let-patterns": {
+			"patterns": [
+				{
+					"begin": "\\b(?=(let)\\b)",
+					"end": "(?==)",
+					"endCaptures": {
+						"1": {
+							"name": "keyword.operator"
+						}
+					},
+					"beginCaptures": {
+						"2": {
+							"name": "variable.name"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#patterns"
+						}
+					]
+
+				}
+			]
+		},
+		"patterns": {
+			"patterns": [
+				{
+					"begin": "\\(",
+					"end": "\\)",
+					"patterns": [
+						{
+							"include": "#patterns"
+						}
+					]
+				},
+				{
+					"match": "\\b([a-zA-Z_][a-zA-Z0-9+]*)\\b",
+					"captures": {
+						"1": {
+							"name": "variable.name"
+						}
+					}
+				}
+			]
+		},
+		"type-annotations": {
+			"patterns": [
+				{
+					"begin": "\\b(?=(:\\s*))",
+					"end": "(?=[=);])"
+				},
+				{
+					"begin": "(?=(:\\s*))\\b(fn)\\b",
+					"end": "(?=[=);])",
+					"beginCaptures": {
+						"0": {
+							"name": "keyword"
+						}
+					}
+				},
+				{
+					"match": "(?=(:\\s*))\\b[a-zA-Z_][a-zA-Z0-9_]+\\b",
+					"captures": {
+						"0": {
+							"name": "entity.name.type"
+						}
+					}
+				}
+			]
+		},
+		"expressions": {
+			"patterns": [
+				{
+					"include": "#fn-expressions"
+				},
+				{
+					"include": "#module-expressions"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#literal-expressions"
+				},
+				{
+					"include": "#numbers"
+				},
+				{
+					"include": "#call-expressions"
+				},
+				{
+					"include": "#var-expressions"
+				}
+			]
+		},
+		"module-expressions": {
+			"patterns": [
+				{
+					"begin": "\\b(module\\s*\\{)",
+					"end": "\\}",
+					"patterns": [
+						{
+							"include": "#declarations"
+						}
+					]
+				}
+			]
+		},
+		"var-expressions": {
+			"patterns": [
+				{
+					"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+				}
+			]
+		},
+		"fn-expressions": {
+			"patterns": [
+				{
+					"begin": "\\b(?=(fn)\\b[\\(\\[])",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fn-params"
+						},
+						{
+							"include": "#fn-body"
+						}
+					]
+
+				}
+			]
+		},
+		"fn-params": {
+			"patterns": [
+				{
+					"begin": "(?=(fn\\s*))",
+					"end": "(?=(\\)))"
+				},
+				{
+					"include": "#fn-generic-params"
+				},
+				{
+					"include": "#type-annotation"
+				}
+			]
+		},
+		"fn-generic-params": {
+			"patterns": [
+				
+			]
+		},
+		"fn-body": {
+			"patterns": [
+				{
+					"begin": "(?=(=>))",
+					"end": "(?=[;,])",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#expressions"
+						}
+					]
+
+				}
+			]
+		},
+		"literal-expressions": {
+			"patterns": [
+				{
+					"name": "constant.language.lm",
+					"match": "\\b(true|false|unit)\\b"
+				}
+			]
+		},
+		"call-expressions": {
+			"patterns": [
+				{
+					"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)(?=\\()",
+					"end": "(?=\\))",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.name.function"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#call-args"
+						}
+					]
+				}
+			]
+		},
+		"call-args": {
+			"patterns": [
+				{
+					"begin": "(?=\\()",
+					"end": "(?=\\))",
+					"patterns": [
+						{
+							"include": "#expressions"
+						}
+					]
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"match": "([\\d_.]+)",
+					"captures": {
+						"1": {
+							"name": "constant.numeric"
+						}
+					}
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.lm",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.lm",
+					"match": "\\\\[\\\\rnt]"
+				}
+			]
+		}
+	},
+	"scopeName": "lm"
+}
