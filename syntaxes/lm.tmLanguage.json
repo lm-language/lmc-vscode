@@ -10,10 +10,10 @@
 		"declarations": {
 			"patterns": [
 				{
-					"include": "#extern-declarations"
+					"include": "#decl-modifiers"
 				},
 				{
-					"include": "#extern-type"
+					"include": "#type-alias"
 				},
 				{
 					"include": "#let-declarations"
@@ -23,23 +23,20 @@
 				}
 			]
 		},
-		"extern-type": {
+		"decl-modifiers": {
 			"patterns": [
 				{
-					"begin": "\\b(extern\\s+type\\s+)([a-zA-Z_][a-zA-Z0-9_]*)",
-					"end": "(?=;)",
+					"begin": "\\b(extern|abstract|private)\\b",
+					"end": "(?=(\\b(type|let|extern|abstract|private)\\b))",
 					"beginCaptures": {
 						"1": {
 							"name": "keyword"
-						},
-						"2": {
-							"name": "entity.name.type"
 						}
 					}
 				}
 			]
 		},
-		"type-declaration": {
+		"type-alias": {
 			"patterns": [
 				{
 					"begin": "\\b(type\\s+)([a-zA-Z_][a-zA-Z0-9_]*)",
@@ -52,31 +49,6 @@
 							"name": "entity.name.type"
 						}
 					}
-				}
-			]
-		},
-		"extern-declarations": {
-			"patterns": [
-				{
-					"begin": "\\b(extern)\\s+(?=(let)\\s+)",
-					"end": "(?=;)",
-					"beginCaptures": {
-						"1": {
-							"name": "keyword"
-						},
-						"2": {
-							"name": "keyword"
-						}
-
-					},
-					"patterns": [
-						{
-							"include": "#let-patterns"
-						},
-						{
-							"include": "#type-annotations"
-						}
-					]
 				}
 			]
 		},
@@ -228,8 +200,13 @@
 		"module-expressions": {
 			"patterns": [
 				{
-					"begin": "\\b(module\\s*\\{)",
+					"begin": "\\b(module)\\s*\\{",
 					"end": "\\}",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
 					"patterns": [
 						{
 							"include": "#declarations"
