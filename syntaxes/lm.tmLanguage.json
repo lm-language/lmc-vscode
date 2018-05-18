@@ -26,8 +26,8 @@
 		"decl-modifiers": {
 			"patterns": [
 				{
-					"begin": "\\b(extern|abstract|private)\\b",
-					"end": "(?=(\\b(type|let|extern|abstract|private)\\b))",
+					"begin": "\\b(extern|abstract|private|override)\\b",
+					"end": "(?=(\\b(type|let|extern|abstract|private|override)\\b))",
 					"beginCaptures": {
 						"1": {
 							"name": "keyword"
@@ -76,6 +76,9 @@
 		"let-rhs": {
 			"patterns": [
 				{
+					"match": "(?=;)"
+				},
+				{
 					"begin": "(?==)",
 					"end": "(?=;)",
 					"beginCaptures": {
@@ -106,7 +109,7 @@
 			"patterns": [
 				{
 					"begin": "\\b(?=(let)\\b)",
-					"end": "(?==)",
+					"end": "(?=[=;])",
 					"endCaptures": {
 						"1": {
 							"name": "keyword.operator"
@@ -172,8 +175,18 @@
 				}
 			]
 		},
+		"expression-terminator": {
+			"patterns": [
+				{
+					"match": "(?=;)"
+				}
+			]
+		},
 		"expressions": {
 			"patterns": [
+				{
+					"include": "#expression-terminator"
+				},
 				{
 					"include": "#fn-expressions"
 				},
