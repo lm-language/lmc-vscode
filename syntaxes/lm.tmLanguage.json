@@ -20,6 +20,27 @@
 				},
 				{
 					"include": "#type-declaration"
+				},
+				{
+					"include": "#include-declaration"
+				}
+			]
+		},
+		"include-declaration": {
+			"patterns": [
+				{
+					"begin": "\\b(include)\\b",
+					"end": ";",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#expressions"
+						}
+					]
 				}
 			]
 		},
