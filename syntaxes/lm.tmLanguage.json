@@ -48,7 +48,7 @@
 			"patterns": [
 				{
 					"begin": "\\b(extern|abstract|private|override)\\b",
-					"end": "(?=(\\b(type|let|extern|abstract|private|override)\\b))",
+					"end": "(?=(\\b(type|let|include|extern|abstract|private|override)\\b))",
 					"beginCaptures": {
 						"1": {
 							"name": "keyword"
