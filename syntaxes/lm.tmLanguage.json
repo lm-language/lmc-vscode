@@ -196,8 +196,17 @@
 				}
 			]
 		},
-		"expression-terminator": {
+		"expression-tail": {
 			"patterns": [
+				{
+					"begin": "(?={)",
+					"end": "}",
+					"patterns": [
+						{
+							"include": "#declarations"
+						}
+					]
+				},
 				{
 					"match": "(?=;)"
 				}
@@ -206,7 +215,7 @@
 		"expressions": {
 			"patterns": [
 				{
-					"include": "#expression-terminator"
+					"include": "#expression-tail"
 				},
 				{
 					"include": "#fn-expressions"
@@ -228,6 +237,19 @@
 				},
 				{
 					"include": "#var-expressions"
+				}
+			]
+		},
+		"block": {
+			"patterns": [
+				{
+					"begin": "\\b{\\b",
+					"end": "\\b}\\b",
+					"patterns": [
+						{
+							"include": "#expressions"
+						}
+					]
 				}
 			]
 		},
