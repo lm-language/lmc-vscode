@@ -199,11 +199,16 @@
 		"expression-tail": {
 			"patterns": [
 				{
-					"begin": "(?={)",
-					"end": "}",
+					"begin": "\\b(with)\\b",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
 					"patterns": [
 						{
-							"include": "#declarations"
+							"include": "#expressions"
 						}
 					]
 				},
