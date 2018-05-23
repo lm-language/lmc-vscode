@@ -223,6 +223,12 @@
 					"include": "#expression-tail"
 				},
 				{
+					"include": "#block"
+				},
+				{
+					"include": "#if-clause"
+				},
+				{
 					"include": "#fn-expressions"
 				},
 				{
@@ -245,15 +251,37 @@
 				}
 			]
 		},
-		"block": {
+		"if-clause": {
 			"patterns": [
 				{
-					"begin": "\\b{\\b",
-					"end": "\\b}\\b",
+					"begin": "\\b(if|else)\\b",
+					"end": "(?=([;]|else))",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
 					"patterns": [
 						{
 							"include": "#expressions"
 						}
+					]
+				}
+			]
+		},
+		"block": {
+			"patterns": [
+				{
+					"begin": "{",
+					"end": "}",
+					"patterns": [
+						{
+							"include": "#declarations"
+						},
+						{
+							"include": "#expressions"
+						}
+	
 					]
 				}
 			]
@@ -286,7 +314,7 @@
 		"fn-expressions": {
 			"patterns": [
 				{
-					"begin": "\\b(?=(fn)\\b[\\(\\[])",
+					"begin": "\\b(?=(fn)\\s*[\\(\\[])",
 					"end": "(?=;)",
 					"beginCaptures": {
 						"1": {
