@@ -160,7 +160,7 @@
 					"end": "(?=[=;])",
 					"patterns": [
 						{
-							"include": "#let-patterns"
+							"include": "#pattern"
 						}
 					]
 				}
@@ -263,6 +263,9 @@
 					"include": "#expression-tail"
 				},
 				{
+					"include": "#match-expression"
+				},
+				{
 					"include": "#block"
 				},
 				{
@@ -289,6 +292,149 @@
 				{
 					"include": "#var-expressions"
 				}
+			]
+		},
+		"match-expression": {
+			"patterns": [
+				{
+					"begin": "\\b(?=(match\\b))",
+					"end": "(?=;)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword"
+						}
+					},
+					"patterns": [
+						{
+							"begin": "\\b(match\\b)",
+							"end": "(?={)",
+							"patterns": [
+								{
+									"include": "#expressions"
+								}
+							]
+						},
+						{
+							"begin": "{",
+							"end": "}",
+							"patterns": [
+								{
+									"include": "#match-branch"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"match-branch": {
+			"patterns": [
+				{
+					"begin": "(?=((\\.)|[a-zA-Z0-9_]))",
+					"end": "(?=([,}]))",
+					"patterns": [
+						{
+							"begin": "(?=((\\.)|[a-zA-Z0-9_]))",
+							"end": "(?=(=>))",
+							"patterns": [
+								{
+									"include": "#pattern"
+								}
+							]
+						},
+						{
+							"begin": "=>",
+							"end": "(?=[,}])",
+							"patterns": [
+								{
+									"include": "#expressions"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"pattern": {
+			"patterns": [
+				{
+					"begin": "\\(",
+					"end": "\\)",
+					"patterns": [
+						{
+							"include": "#pattern"
+						}
+					]
+				},
+				{
+					"include": "#type-annotation"
+				},
+				{
+					"match": "\\b([A-Z][a-zA-z0-9_]*)\\s*(?=((=>)|[,)]))",
+					"captures": {
+						"1": {
+							"name": "entity.name.function"
+						}
+					}
+				},
+				{
+					"match": "\\b([a-z_][a-zA-Z0-9_]*)\\b"
+				},
+				{
+					"begin": "\\b([A-Z][a-zA-z0-9_]*)\\s*\\(",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function"
+						}
+					},
+					"patterns": [
+						{
+							"match": "\\.\\.",
+							"name": "entity.name.class"
+						},
+						{
+							"begin": "([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?==)",
+							"beginCaptures": {
+								"1": {
+									"name": "variable.name"
+								}
+							},
+							"end": "(?=[,)])",
+							"patterns": [
+								{
+									"begin": "(?==)",
+									"end": "(?=([,)]|=>))",
+									"patterns": [
+										{
+											"include": "#pattern"
+										}
+									]
+								}
+							]
+						},
+						{
+							"include": "#pattern"
+						}
+					],
+					"end": "\\)"
+				},
+				{
+					"match": "\\b([A-Z][a-zA-Z0-9_]*)",
+					"captures": {
+						"1": {
+							"name": "entity.name.class"
+						}
+					}
+				},
+				{
+					"match": "\\b_\\b",
+					"name": "meta.parameter.type.variable"
+				}
+			]
+		},
+		"match-body": {
+			"patterns": [
+				
 			]
 		},
 		"if-clause": {
